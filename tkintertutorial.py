@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- codin: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 """
 ZetCode Tkinter tutorial
@@ -9,16 +9,22 @@ on the screen.
 
 """
 
-from Tkinter import Tk, Frame, BOTH
+from Tkinter import Tk, BOTH
+from ttk import Frame, Button, Style
 
 class Example(Frame):
 
     def __init__(self, parent):
-        Frame.__init__(self, parent, background="white")
+        Frame.__init__(self, parent)
         self.parent = parent
-        self.parent.title("Centered Window")
+        self.parent.title("Centered Window with quit button")
+        self.style=Style()
+        self.style.theme_use("default")
         self.pack(fill=BOTH, expand=1)
         self.centerWindow()
+
+        quitButton = Button(self,text="Quit",command=self.quit)
+        quitButton.place(x=50,y=50)
 
     def centerWindow(self):
         w = 290
