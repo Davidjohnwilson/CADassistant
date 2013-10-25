@@ -1,0 +1,21 @@
+Choices for CAD construction:
+
+ standard/partial
+        |
+       \ /
+ Projection operator: Collins,Hong,McCallum,Brown...
+        |
+       \ /
+ Use equational constraints? (Requires McC/Brown)
+        |
+       \ /
+ If so: single equational constraint, multiple (implicit), or TTICAD?
+        |
+       \ /
+ Layered CAD? If so, how many layers?
+        |
+       \ /
+ Manifold CAD? (Requires Equational Constraint(s))
+        |
+       \ /
+ Need to evaluate on each cell? Quantifier Elimination?
