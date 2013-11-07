@@ -14,7 +14,32 @@ if __name__ == "__main__":
         print "Manual mode enabled\n"
 
 
-def choosevariable(problem,variables):
-    if len(variables) == 1:
-        return variables
 
+def CADname(constr,inva,subCAD):
+    #Simple function to return correct abbreviation
+    CADstring = "CAD"
+
+    if inva.lower() == "sign" or inva.lower() == "si":
+        CADstring = "SI"+CADstring
+    elif inva.lower() == "order" or inva.lower() == "oi":
+        CADstring = "OI"+CADstring
+    elif inva.lower() == "equational constraint" or inva.lower() == "ec":
+        CADstring = "EC"+CADstring
+    elif inva.lower() == "truth table" or inva.lower() == "tti":
+        CADstring = "TTI"+CADstring
+
+    if constr.lower() == "projection" or constr.lower() == "pl":
+        CADstring = "PL-"+CADstring
+    elif constr.lower() == "triangular sets" or constr.lower() == "regular chains" or constr.lower() == "t" or constr.lower() == "rc":
+        CADstring = "RC-"+CADstring
+
+    if subCAD.lower() == "manifold" or subCAD.lower() == "m":
+        CADstring = "M-"+CADstring
+    elif subCAD.lower() == "layered" or subCAD.lower() == "l":
+        CADstring = "M-"+CADstring
+    elif subCAD.lower() == "layered manifold" or subCAD.lower() == "lm":
+        CADstring = "LM-"+CADstring
+
+    return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
+
+print CADname("PL","TTI","LM")
