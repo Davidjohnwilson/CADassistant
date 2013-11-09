@@ -42,4 +42,26 @@ def CADname(constr,inva,subCAD):
 
     return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
 
-print CADname("PL","TTI","LM")
+print(CADname("PL","TTI","LM")+"\n")
+
+
+class CadProblem:
+    name = ""
+    polys = []
+    variables = []
+
+    def __init__(self,name,polys,variables):
+        self.name = name
+        self.polys = polys
+        self.variables = variables
+
+    def printCAD(self):
+        printstr = ""
+        printstr += "Name : \t" + self.name + "\n"
+        printstr += "Polys: \t" + ",".join(self.polys) + "\n"
+        printstr += "Vars : \t" + ",".join(self.variables) + "\n"
+        return printstr
+
+
+newCAD = CadProblem("Parabola", ["a*x^2 + b*x + c"], ["x","a","b","c"])
+print(newCAD.printCAD())
