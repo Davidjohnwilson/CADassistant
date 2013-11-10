@@ -73,13 +73,26 @@ class CadProblemMethod(CadProblem):
         self.inva   = inva
         self.subCAD = subCAD
 
+    def setConstr(self,constr):
+        self.constr = constr
+    def setInva(self,inva):
+        self.inva   = inva
+    def setSubCAD(self,subCAD):
+        self.subCAD = subCAD
+
     def printCADMethod(self):
         printstr = self.printCAD()
         printstr += "CAD : \t" + CADname(self.constr,self.inva,self.subCAD)
-        return printstr
+        return printstr  + "\n"
 
 
 
 newCADmethod = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"PL","TTI","LM")
 print(newCADmethod.printCADMethod())
 
+newCADmblank = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"","","")
+print(newCADmblank.printCADMethod())
+newCADmblank.setConstr("RC")
+newCADmblank.setInva("TTI")
+newCADmblank.setSubCAD("M")
+print(newCADmblank.printCADMethod())
