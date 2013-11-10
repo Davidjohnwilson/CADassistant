@@ -58,10 +58,28 @@ class CadProblem:
     def printCAD(self):
         printstr = ""
         printstr += "Name : \t" + self.name + "\n"
-        printstr += "Polys: \t" + ",".join(self.polys) + "\n"
+        printstr += "Polys: \t" + ", ".join(self.polys) + "\n"
         printstr += "Vars : \t" + ",".join(self.variables) + "\n"
         return printstr
 
-
 newCAD = CadProblem("Parabola", ["a*x^2 + b*x + c"], ["x","a","b","c"])
 print(newCAD.printCAD())
+
+
+class CadProblemMethod(CadProblem):
+    def __init__(self,name,polys,variables,constr,inva,subCAD):
+        CadProblem.__init__(self,name,polys,variables)
+        self.constr = constr
+        self.inva   = inva
+        self.subCAD = subCAD
+
+    def printCADMethod(self):
+        printstr = self.printCAD()
+        printstr += "CAD : \t" + CADname(self.constr,self.inva,self.subCAD)
+        return printstr
+
+
+
+newCADmethod = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"PL","TTI","LM")
+print(newCADmethod.printCADMethod())
+
