@@ -6,43 +6,17 @@ import sys
 #Store them in arglist
 arglist = sys.argv[1:]
 
-if __name__ == "__main__":
-    if len(arglist)>0:
-        if arglist[0]=='interactive':
-            print "Interactive mode enabled\n"
-    else:
-        print "Manual mode enabled\n"
+welcome = """
+############################################################
+#     CAD Assistant                                        #
+#          by David Wilson (D.J.Wilson@bath.ac.uk)         #
+#                                                          #
+#     A tool for computing CADs with various technologies  #
+#   and techniques.                                        #
+#                                                          #
+############################################################
 
-
-
-def CADname(constr,inva,subCAD):
-    #Simple function to return correct abbreviation
-    CADstring = "CAD"
-
-    if inva.lower() == "sign" or inva.lower() == "si":
-        CADstring = "SI"+CADstring
-    elif inva.lower() == "order" or inva.lower() == "oi":
-        CADstring = "OI"+CADstring
-    elif inva.lower() == "equational constraint" or inva.lower() == "ec":
-        CADstring = "EC"+CADstring
-    elif inva.lower() == "truth table" or inva.lower() == "tti":
-        CADstring = "TTI"+CADstring
-
-    if constr.lower() == "projection" or constr.lower() == "pl":
-        CADstring = "PL-"+CADstring
-    elif constr.lower() == "triangular sets" or constr.lower() == "regular chains" or constr.lower() == "t" or constr.lower() == "rc":
-        CADstring = "RC-"+CADstring
-
-    if subCAD.lower() == "manifold" or subCAD.lower() == "m":
-        CADstring = "M-"+CADstring
-    elif subCAD.lower() == "layered" or subCAD.lower() == "l":
-        CADstring = "M-"+CADstring
-    elif subCAD.lower() == "layered manifold" or subCAD.lower() == "lm":
-        CADstring = "LM-"+CADstring
-
-    return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
-
-print(CADname("PL","TTI","LM")+"\n")
+"""
 
 
 class CadProblem:
@@ -62,8 +36,8 @@ class CadProblem:
         printstr += "Vars : \t" + ",".join(self.variables) + "\n"
         return printstr
 
-newCAD = CadProblem("Parabola", ["a*x^2 + b*x + c"], ["x","a","b","c"])
-print(newCAD.printCAD())
+# newCAD = CadProblem("Parabola", ["a*x^2 + b*x + c"], ["x","a","b","c"])
+# print(newCAD.printCAD())
 
 
 class CadProblemMethod(CadProblem):
@@ -80,19 +54,100 @@ class CadProblemMethod(CadProblem):
     def setSubCAD(self,subCAD):
         self.subCAD = subCAD
 
-    def printCADMethod(self):
+    def printCADproblem(self):
         printstr = self.printCAD()
-        printstr += "CAD : \t" + CADname(self.constr,self.inva,self.subCAD)
+        printstr += "CAD : \t" + self.CADacronym()
         return printstr  + "\n"
 
+    def CADacronym(self):
+        #Simple function to return correct abbreviation
+        CADstring = "CAD"
+        if self.inva.lower() == "sign" or self.inva.lower() == "si":
+            CADstring = "SI"+CADstring
+        elif self.inva.lower() == "order" or self.inva.lower() == "oi":
+            CADstring = "OI"+CADstring
+        elif self.inva.lower() == "equational constraint" or self.inva.lower() == "ec":
+            CADstring = "EC"+CADstring
+        elif self.inva.lower() == "truth table" or self.inva.lower() == "tti":
+            CADstring = "TTI"+CADstring
+
+        if self.constr.lower() == "projection" or self.constr.lower() == "pl":
+            CADstring = "PL-"+CADstring
+        elif self.constr.lower() == "triangular sets" or self.constr.lower() == "regular chains" or self.constr.lower() == "t" or self.constr.lower() == "rc":
+            CADstring = "RC-"+CADstring
+
+        if self.subCAD.lower() == "manifold" or self.subCAD.lower() == "m":
+            CADstring = "M-"+CADstring
+        elif self.subCAD.lower() == "layered" or self.subCAD.lower() == "l":
+            CADstring = "M-"+CADstring
+        elif self.subCAD.lower() == "layered manifold" or self.subCAD.lower() == "lm":
+            CADstring = "LM-"+CADstring
+
+        return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
 
 
-newCADmethod = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"PL","TTI","LM")
-print(newCADmethod.printCADMethod())
 
-newCADmblank = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"","","")
-print(newCADmblank.printCADMethod())
-newCADmblank.setConstr("RC")
-newCADmblank.setInva("TTI")
-newCADmblank.setSubCAD("M")
-print(newCADmblank.printCADMethod())
+# newCADmethod = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"PL","TTI","LM")
+# print(newCADmethod.printCADMethod())
+
+# newCADmblank = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"","","")
+# print(newCADmblank.printCADMethod())
+# newCADmblank.setConstr("RC")
+# newCADmblank.setInva("TTI")
+# newCADmblank.setSubCAD("M")
+# print(newCADmblank.printCADMethod())
+
+
+def manualMethod():
+    print(welcome)
+    namestr = raw_input("Please enter a name for the CAD problem:")
+    polystr = raw_input("Please enter the polynomials for your problem,\n within square brackets and separated by commas:")
+    varstr  = raw_input("Please enter the variables for your problem,\n within square brackets and separated by commas:")
+    polylist = polystr.split(',')
+    polylist[0] = polylist[0][1:]
+    polylist[-1] = polylist[-1][:-1]
+    varlist  = varstr.split(',')
+    varlist[0] = varlist[0][1:]
+    varlist[-1] = varlist[-1][:-1]
+    currCADproblem = CadProblemMethod(namestr,polylist,varlist,"","","")
+    print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
+
+    constrstr = raw_input("Please specify a construction method (default: projection&lifting):")
+    if constrstr=="":
+        constrstr = "PL"
+    currCADproblem.setConstr(constrstr)
+
+    invastr = raw_input("Please specify an invariance to build the CAD with respect to (default: sign-invariance):")
+    if invastr=="":
+        invastr = "SI"
+    currCADproblem.setInva(invastr)
+
+    subCADstr = raw_input("Please specify any subCAD techniques to use (default: none):")
+    if subCADstr=="":
+        subCADstr = ""
+    currCADproblem.setSubCAD(subCADstr)
+
+    print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    if len(arglist)>0:
+        if arglist[0]=='interactive':
+            print "Interactive mode enabled\n"
+    else:
+        print "Manual mode enabled\n"
+        manualMethod()
+
+
