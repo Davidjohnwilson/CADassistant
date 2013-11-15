@@ -19,6 +19,9 @@ welcome = """
 """
 
 
+#Create CAD error exception
+class CADError( Exception ): pass
+
 class CadProblem:
     name = ""
     polys = []
@@ -87,15 +90,69 @@ class CadProblemMethod(CadProblem):
 
 
 
-# newCADmethod = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"PL","TTI","LM")
-# print(newCADmethod.printCADMethod())
+class CadTTICAD(CadProblemMethod):
+    def __init__(self,name,polys,variables,constr,inva,subCAD,clauses,eqcons):
+        CadProblemMethod.__init__(self,name,polys,variables,constr,inva,subCAD)
+        self.clauses = clauses
+        self.eqcons = eqcons
+        self.checkClauses()
 
-# newCADmblank = CadProblemMethod("Parabola", ["a*x^2 + b*x + c","a*x-1"], ["x","a","b","c"],"","","")
-# print(newCADmblank.printCADMethod())
-# newCADmblank.setConstr("RC")
-# newCADmblank.setInva("TTI")
-# newCADmblank.setSubCAD("M")
-# print(newCADmblank.printCADMethod())
+    #Check input is a valid set of clauses - shouldn't be used directly by user!
+    def checkClausesInp(self,clauses):
+         for i in clauses:
+            for j in i:
+                if j>len(self.polys):
+                    raise CADError("Clause references non-existent poly")
+
+    #Check the defined clauses are correct
+    def checkClauses(self):
+        self.checkClausesInp(self.clauses)
+
+    def setClauses(self,clauses):
+        self.checkClausesInp(clauses)
+        self.clauses = clauses
+
+
+    def checkEqConsInp(self,eqcons):
+        if len(self.clauses) != len(self.eqcons):
+            CADError("Number of clauses != Number of EqCons!")
+        for i in xrange(len(self.clauses)):
+            for j in eqcons[i]:
+                if j not in self.clauses[i]:
+                    CADError("Equational Constraint chosen is not part of clause!")
+
+    def checkEqCons(self):
+        self.checkEqConsInp(self.eqcons)
+
+    def setEqCons(self,eqcons):
+        self.checkEqConsInp(eqcons)
+        self.eqcons = eqcons
+
+    def printTTICADClauses(self):
+        printstr = "Clauses:\t"
+        for cl in self.clauses:
+            printstr += "[" + ",".join(map(str,cl)) + "]\t"
+        printstr += "\nEqCons: \t"
+        for ec in self.eqcons:
+            printstr += "[" + ",".join(map(str,ec)) + "]\t"
+        return printstr + "\n"
+
+
+#TTICAD tests
+Tticad = CadTTICAD("Parabola", ["a*x^2 + b*x + c", "sdasd","asdasd"], ["x","a","b","c"],"PL","SI","L",[[0,1],[2]],[[1],[]])
+#print(Tticad.CADacronym())
+#Tticad.checkClausesInp([[1,2]])
+#Tticad.checkEqCons()
+print(Tticad.printTTICADClauses())
+
+
+
+
+
+
+
+
+
 
 
 def manualMethod():
@@ -128,18 +185,6 @@ def manualMethod():
     currCADproblem.setSubCAD(subCADstr)
 
     print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
