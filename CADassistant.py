@@ -1,9 +1,9 @@
-#CAD Assistant Program
+# CAD Assistant Program
 
 # Have access to the command line arguments
 import sys
 
-#Store them in arglist
+# Store them in arglist
 arglist = sys.argv[1:]
 
 welcome = """
@@ -18,9 +18,13 @@ welcome = """
 
 """
 
-#Create CAD error exception
+# Create CAD error exception
 class CADError( Exception ): pass
 
+# CadProblem Class
+# Core class of a CAD problem consisting of it's name, polynomials
+# and variables. Includes procedure to output a printable string 
+# of the problem.
 class CadProblem:
     name = ""
     polys = []
@@ -38,7 +42,12 @@ class CadProblem:
         printstr += "Vars : \t" + ",".join(self.variables) + "\n"
         return printstr
 
-
+# CadProblemMethod Class (extends CadProblem)
+# A CAD problem along with choices of how to construct it, what
+# it needs to be invariant with respect to, and whether it uses
+# any subCAD techniques. Includes procedures to set these
+# parameters as well as produce printable strings for the CAD
+# acronym and the overall problem.
 class CadProblemMethod(CadProblem):
     def __init__(self,name,polys,variables,constr,inva,subCAD):
         CadProblem.__init__(self,name,polys,variables)
@@ -84,7 +93,11 @@ class CadProblemMethod(CadProblem):
 
         return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
 
-
+# CadTTICAD Class (extends CadProblemMethod)
+# A CAD Problem with the above choices and lists describing the 
+# clauses and equational constraints. Includes procedures to check
+# validity of choices, set choices, and produce a printable string 
+# describing the CAD problem.
 class CadTTICAD(CadProblemMethod):
     def __init__(self,name,polys,variables,constr,inva,subCAD,clauses,eqcons):
         CadProblemMethod.__init__(self,name,polys,variables,constr,inva,subCAD)
