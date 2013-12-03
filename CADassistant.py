@@ -95,7 +95,7 @@ class CadTTICAD(CadProblemMethod):
         CadProblemMethod.__init__(self,name,polys,variables,constr,inva,subCAD)
         self.clauses = clauses
         self.eqcons = eqcons
-        self.checkClauses()
+        #self.checkClauses()
 
     #Check input is a valid set of clauses - shouldn't be used directly by user!
     def checkClausesInp(self,clauses):
@@ -125,8 +125,9 @@ class CadTTICAD(CadProblemMethod):
         self.checkEqConsInp(self.eqcons)
 
     def setEqCons(self,eqcons):
-        self.checkEqConsInp(eqcons)
         self.eqcons = eqcons
+        self.checkEqConsInp(eqcons)
+
 
     def printTTICADClauses(self):
         printstr = "Clauses:\t"
@@ -186,13 +187,63 @@ def manualMethod():
 
     print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
 
+    print("Checking whether we are dealing with Equational Constraints or TTICAD...\n")
+    if currCADproblem.inva.lower() == "eq" or currCADproblem.inva.lower() == "tti":
+        print("Dealing with Equational constraints. Now identifying clauses.\n")
+        currCADproblem.__class__ = CadTTICAD
+
+        print("\nPolynomials are:")
+        for j in xrange(len(currCADproblem.polys)):
+                print("Poly " + str(j) + ": " + str(currCADproblem.polys[j]))
+
+
+        clausestr = raw_input("Please enter in the clauses of the TTICAD (as a list of lists identifying the correct polynomials), or if dealing with equational constraints leave empty: ")
+        if clausestr == "":
+            currCADproblem.setClauses([list(xrange(len(currCADproblem.polys)))])
+            print(currCADproblem.clauses)
+        else:
+            clausenums = []   #clauses as numbers
+            clauselist = clausestr[1:-1].replace('[','|')
+            clauselist = clauselist.replace(']','|')
+            clauselist = clauselist.split('|') #split according to closing brackets
+            clauselist = [i for i in clauselist if i != '']
+            clauselist = [i for i in clauselist if i != ',']
+            for i in xrange(len(clauselist)):   #ignore final bracket
+                indivclause = []
+                indivclauselist = clauselist[i].split(',')
+                for j in xrange(len(indivclauselist)):
+                    indivclause.append(int(indivclauselist[j]))
+                clausenums.append(indivclause)
+            currCADproblem.setClauses(clausenums)
+
+        EClist = []
+        for i in xrange(len(currCADproblem.clauses)):
+            print("\nClause " + str(i) + ":")
+            for j in currCADproblem.clauses[i]:
+                print("Poly " + str(j) + ": " + str(currCADproblem.polys[j]))
+            clauseEC = raw_input("Select the equational constraint for this clause: ")
+            EClist.append([clauseEC])
+        currCADproblem.setEqCons(EClist)
+
+        print("\n" + currCADproblem.printTTICADClauses())
+
+
+        #eqconsstr = raw_input("")
+        #currCADproblem.setEqCons([[1]])
+        #print(currCADproblem.printTTICADClauses())
+
+
+    else:
+        print("Dealing with non-equational constraint based CAD")
+
+
+
 
 if __name__ == "__main__":
     if len(arglist)>0:
         if arglist[0]=='interactive':
             print "Interactive mode enabled\n"
     else:
-        print "Manual mode enabled\n"
         manualMethod()
 
 
