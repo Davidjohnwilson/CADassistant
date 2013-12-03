@@ -19,3 +19,18 @@ for i in xrange(len(clauselist)):   #ignore final bracket
         indivclause.append(int(indivclauselist[j]))
     clausenums.append(indivclause)
 print(clausenums)
+
+
+
+#Test input
+"""
+Test problem Name
+[3*x^2+4*y-3, x^2-y^3,x^3-y^2,y-x]
+[x,y]
+t
+tti
+lm
+[[0,3],[1,2]]
+3
+1
+"""

@@ -18,7 +18,6 @@ welcome = """
 
 """
 
-
 #Create CAD error exception
 class CADError( Exception ): pass
 
@@ -38,9 +37,6 @@ class CadProblem:
         printstr += "Polys: \t" + ", ".join(self.polys) + "\n"
         printstr += "Vars : \t" + ",".join(self.variables) + "\n"
         return printstr
-
-# newCAD = CadProblem("Parabola", ["a*x^2 + b*x + c"], ["x","a","b","c"])
-# print(newCAD.printCAD())
 
 
 class CadProblemMethod(CadProblem):
@@ -89,7 +85,6 @@ class CadProblemMethod(CadProblem):
         return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
 
 
-
 class CadTTICAD(CadProblemMethod):
     def __init__(self,name,polys,variables,constr,inva,subCAD,clauses,eqcons):
         CadProblemMethod.__init__(self,name,polys,variables,constr,inva,subCAD)
@@ -112,7 +107,6 @@ class CadTTICAD(CadProblemMethod):
         self.checkClausesInp(clauses)
         self.clauses = clauses
 
-
     def checkEqConsInp(self,eqcons):
         if len(self.clauses) != len(self.eqcons):
             CADError("Number of clauses != Number of EqCons!")
@@ -128,7 +122,6 @@ class CadTTICAD(CadProblemMethod):
         self.eqcons = eqcons
         self.checkEqConsInp(eqcons)
 
-
     def printTTICADClauses(self):
         printstr = "Clauses:\t"
         for cl in self.clauses:
@@ -137,22 +130,6 @@ class CadTTICAD(CadProblemMethod):
         for ec in self.eqcons:
             printstr += "[" + ",".join(map(str,ec)) + "]\t"
         return printstr + "\n"
-
-
-#TTICAD tests
-Tticad = CadTTICAD("Parabola", ["a*x^2 + b*x + c", "sdasd","asdasd"], ["x","a","b","c"],"PL","SI","L",[[0,1],[2]],[[1],[]])
-#print(Tticad.CADacronym())
-#Tticad.checkClausesInp([[1,2]])
-#Tticad.checkEqCons()
-print(Tticad.printTTICADClauses())
-
-
-
-
-
-
-
-
 
 
 
@@ -235,8 +212,6 @@ def manualMethod():
 
     else:
         print("Dealing with non-equational constraint based CAD")
-
-
 
 
 if __name__ == "__main__":
