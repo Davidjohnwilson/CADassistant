@@ -1,0 +1,35 @@
+Specifications of Functions/Classes in CADassistant.py
+
+
+CadProblem(name,polys,variables):
+    Variables:
+        - name      (string)
+        - polys     (list)
+        - variables (list)
+    Procedures:
+        - printCAD()    String of CAD info
+
+CadProblemMethod(name,polys,variables,constr,inva,subCAD)
+    Variables:
+        - constr    (string)
+        - inva      (string)
+        - subCAD    (string)
+    Procedures:
+        - setConstr(constr)     Sets constraint
+        - setInva(inva)         Sets invariance
+        - setSubCAD(subCAD)     Sets subCAD
+        - CADacronym()          String of CAD acronym
+        - printCADproblem()     String of CAD info plus acronym
+
+CadTTICAD(name,plys,variables,constr,inva,subCAD,clauses,eqcons)
+    Variables:
+        - clauses   (list)
+        - eqcons    (list)
+    Procedures:
+        - checkClausesInp(clauses)  Checks a clause input
+        - checkClauses()            Checks all clauses
+        - setClauses(clauses)       Sets clauses
+        - checkEqConsInp(eqcons)    Checks an EqCons input
+        - checkEqCons()             Checks all EqCons
+        - setEqCons(eqcons)         Sets EqCons
+        - printTTICADClauses()      String of TTICAD clauses
