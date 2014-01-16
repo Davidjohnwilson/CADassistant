@@ -34,3 +34,9 @@ lm
 3
 1
 """
+
+# Questions to ask:
+# Just strict inequalities
+# Does problem need CAD or QE.
+# Are there equational constraints/clauses
+# Are there restrictions on variable ordering (QE)

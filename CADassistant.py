@@ -151,12 +151,16 @@ def manualMethod():
     namestr = raw_input("Please enter a name for the CAD problem:")
     polystr = raw_input("Please enter the polynomials for your problem,\n within square brackets and separated by commas:")
     varstr  = raw_input("Please enter the variables for your problem,\n within square brackets and separated by commas:")
+    # Separate the inputted polynomials
     polylist = polystr.split(',')
-    polylist[0] = polylist[0][1:]
-    polylist[-1] = polylist[-1][:-1]
+    polylist[0] = polylist[0][1:]     # Strip leading '['
+    polylist[-1] = polylist[-1][:-1]  # Strip trailing '['
+    # Separate the inputted variables
     varlist  = varstr.split(',')
-    varlist[0] = varlist[0][1:]
-    varlist[-1] = varlist[-1][:-1]
+    varlist[0] = varlist[0][1:]       # Strip leading '['
+    varlist[-1] = varlist[-1][:-1]    # Strip trailing '['
+
+    # Initialize CADProblemMethod object
     currCADproblem = CadProblemMethod(namestr,polylist,varlist,"","","")
     print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
 
@@ -180,6 +184,7 @@ def manualMethod():
     print("Checking whether we are dealing with Equational Constraints or TTICAD...\n")
     if currCADproblem.inva.lower() == "eq" or currCADproblem.inva.lower() == "tti":
         print("Dealing with Equational constraints. Now identifying clauses.\n")
+        # Cast object into a CadTTICAD object.
         currCADproblem.__class__ = CadTTICAD
 
         print("\nPolynomials are:")
