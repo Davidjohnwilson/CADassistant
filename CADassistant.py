@@ -23,7 +23,7 @@ class CADError( Exception ): pass
 
 # CadProblem Class
 # Core class of a CAD problem consisting of it's name, polynomials
-# and variables. Includes procedure to output a printable string 
+# and variables. Includes procedure to output a printable string
 # of the problem.
 class CadProblem:
     name = ""
@@ -94,9 +94,9 @@ class CadProblemMethod(CadProblem):
         return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
 
 # CadTTICAD Class (extends CadProblemMethod)
-# A CAD Problem with the above choices and lists describing the 
+# A CAD Problem with the above choices and lists describing the
 # clauses and equational constraints. Includes procedures to check
-# validity of choices, set choices, and produce a printable string 
+# validity of choices, set choices, and produce a printable string
 # describing the CAD problem.
 class CadTTICAD(CadProblemMethod):
     def __init__(self,name,polys,variables,constr,inva,subCAD,clauses,eqcons):
@@ -145,7 +145,7 @@ class CadTTICAD(CadProblemMethod):
         return printstr + "\n"
 
 
-
+#manualMethod - let's the user choose how to construct their CAD
 def manualMethod():
     print(welcome)
     namestr = raw_input("Please enter a name for the CAD problem:")
@@ -231,11 +231,49 @@ def manualMethod():
     else:
         print("Dealing with non-equational constraint based CAD")
 
+#Interactive Method tries to discover the best formulation
+def interactiveMethod():
+    print(welcome)
+    namestr = raw_input("Please enter a name for the CAD problem:")
+    polystr = raw_input("Please enter the polynomials for your problem,\n within square brackets and separated by commas:")
+    varstr  = raw_input("Please enter the variables for your problem,\n within square brackets and separated by commas:")
+    # Separate the inputted polynomials
+    polylist = polystr.split(',')
+    polylist[0] = polylist[0][1:]     # Strip leading '['
+    polylist[-1] = polylist[-1][:-1]  # Strip trailing '['
+    # Separate the inputted variables
+    varlist  = varstr.split(',')
+    varlist[0] = varlist[0][1:]       # Strip leading '['
+    varlist[-1] = varlist[-1][:-1]    # Strip trailing '['
+
+    # Initialize CADProblemMethod object
+    currCADproblem = CadProblemMethod(namestr,polylist,varlist,"","","")
+    print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
+
+    strictineq = raw_input("Does your problem involve only strict inequalities? [Y/n] : ").lower()
+    if strictineq=="" or strictineq == "y":
+        strictineq = True
+    else:
+        strictineq = False
+
+    if strictineq:
+        print("You should use a 1-layered CAD. Please load Projection CAD and use the following input: ")
+        strictstr = "C:=LCAD( ["
+        for i in xrange(len(currCADproblem.polys)):
+            strictstr += currCADproblem.polys[i] + ", "
+        strictstr = strictstr[:-2] + "], 1, [" #remove final comma
+        for i in xrange(len(currCADproblem.variables)):
+            strictstr += currCADproblem.variables[i] + ", "
+        strictstr = strictstr[:-2] + "]):\n"
+        strictstr += "nops(C);"
+        print(strictstr)
+
 
 if __name__ == "__main__":
     if len(arglist)>0:
         if arglist[0]=='interactive':
             print "Interactive mode enabled\n"
+            interactiveMethod()
     else:
         manualMethod()
 
