@@ -144,9 +144,8 @@ class CadTTICAD(CadProblemMethod):
             printstr += "[" + ",".join(map(str,ec)) + "]\t"
         return printstr + "\n"
 
-
-#manualMethod - let's the user choose how to construct their CAD
-def manualMethod():
+#Initialising CAD
+def initialisationMethod():
     print(welcome)
     namestr = raw_input("Please enter a name for the CAD problem:")
     polystr = raw_input("Please enter the polynomials for your problem,\n within square brackets and separated by commas:")
@@ -163,6 +162,14 @@ def manualMethod():
     # Initialize CADProblemMethod object
     currCADproblem = CadProblemMethod(namestr,polylist,varlist,"","","")
     print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
+
+    return currCADproblem
+
+
+
+#manualMethod - let's the user choose how to construct their CAD
+def manualMethod():
+    currCADproblem = initialisationMethod()
 
     constrstr = raw_input("Please specify a construction method (default: projection&lifting):")
     if constrstr=="":
@@ -233,22 +240,7 @@ def manualMethod():
 
 #Interactive Method tries to discover the best formulation
 def interactiveMethod():
-    print(welcome)
-    namestr = raw_input("Please enter a name for the CAD problem:")
-    polystr = raw_input("Please enter the polynomials for your problem,\n within square brackets and separated by commas:")
-    varstr  = raw_input("Please enter the variables for your problem,\n within square brackets and separated by commas:")
-    # Separate the inputted polynomials
-    polylist = polystr.split(',')
-    polylist[0] = polylist[0][1:]     # Strip leading '['
-    polylist[-1] = polylist[-1][:-1]  # Strip trailing '['
-    # Separate the inputted variables
-    varlist  = varstr.split(',')
-    varlist[0] = varlist[0][1:]       # Strip leading '['
-    varlist[-1] = varlist[-1][:-1]    # Strip trailing '['
-
-    # Initialize CADProblemMethod object
-    currCADproblem = CadProblemMethod(namestr,polylist,varlist,"","","")
-    print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
+    currCADproblem = initialisationMethod()
 
     strictineq = raw_input("Does your problem involve only strict inequalities? [Y/n] : ").lower()
     if strictineq=="" or strictineq == "y":
@@ -267,6 +259,9 @@ def interactiveMethod():
         strictstr = strictstr[:-2] + "]):\n"
         strictstr += "nops(C);"
         print(strictstr)
+
+
+
 
 
 if __name__ == "__main__":
