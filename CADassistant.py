@@ -154,6 +154,9 @@ def initialisationMethod():
     polylist = polystr.split(',')
     polylist[0] = polylist[0][1:]     # Strip leading '['
     polylist[-1] = polylist[-1][:-1]  # Strip trailing '['
+    for i in xrange(len(polylist)):
+        while (polylist[i][0] == ' '):
+            polylist[i] = polylist[i][1:] # strip leading ' '
     # Separate the inputted variables
     varlist  = varstr.split(',')
     varlist[0] = varlist[0][1:]       # Strip leading '['
@@ -259,6 +262,52 @@ def interactiveMethod():
         strictstr = strictstr[:-2] + "]):\n"
         strictstr += "nops(C);"
         print(strictstr)
+
+    qeProblem = raw_input("Does your problem require quantifier elimination? [y/N] : ").lower()
+    if qeProblem == "y":
+        qeProblem = True
+    else:
+        qeProblem = False
+
+    if qeProblem:
+        print("You should use Qepcad or ... ")
+        quantifiers = raw_input("Please input the quantifiers [in the format '(A x)(E y)']:")
+        numquants = quantifiers.count(')')
+        numfree = len(currCADproblem.variables)-numquants
+
+        qestr = "[ " + currCADproblem.name + ' ]\n'
+        qestr += "("
+        for i in xrange(len(currCADproblem.variables)):
+            qestr += currCADproblem.variables[i] + ", "
+        qestr = qestr[:-2] + ")\n"
+        qestr += str(numfree) + "\n"
+
+        print("For each polynomial please enter a relational operator [=, <, >, <=, >=, =/=].")
+        polyrelations = []
+        for i in xrange(len(currCADproblem.polys)):
+            relation = raw_input("Relation for " + currCADproblem.polys[i] + " : ")
+            polyrelations.append(relation)
+
+        print("For each consecutive pair of polynomials please enter a boolean relation [/\\, \\/, ==>, <==, <==>].")
+        boolrelations = []
+        for i in xrange(len(currCADproblem.polys)-1):
+            relation = raw_input("Relation for [" + currCADproblem.polys[i] + "] ??? [" + currCADproblem.polys[i+1] + "] : ")
+            boolrelations.append(relation)
+
+        #TODO: Negation '~'
+
+        qepcadstr = quantifiers + "[ "
+        for i in xrange(len(currCADproblem.polys)-1):
+            qepcadstr += "[ " + currCADproblem.polys[i] + " " +  polyrelations[i] + " 0 ]"
+            qepcadstr += " " + boolrelations[i] + " "
+        if len(currCADproblem.polys)>1:
+            qepcadstr += "[ " + currCADproblem.polys[-1] + " " + polyrelations[-1] + " 0 ]"
+        qepcadstr += " ]."
+
+        qestr += qepcadstr
+
+        print("Copy the following input into Qepcad:\n")
+        print(qestr)
 
 
 
