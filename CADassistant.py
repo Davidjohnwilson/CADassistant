@@ -319,6 +319,7 @@ if __name__ == "__main__":
             print "Interactive mode enabled\n"
             interactiveMethod()
     else:
+        print "Manual mode enables\n"
         manualMethod()
 
 
