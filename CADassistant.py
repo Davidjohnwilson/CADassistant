@@ -8,13 +8,35 @@ arglist = sys.argv[1:]
 
 welcome = """
 ############################################################
-#     CAD Assistant                                        #
+#     CADAssistant                                         #
 #          by David Wilson (D.J.Wilson@bath.ac.uk)         #
 #                                                          #
 #     A tool for computing CADs with various technologies  #
 #   and techniques.                                        #
 #                                                          #
 ############################################################
+
+"""
+
+helpmessage = """
+
+This is Version 1.0 of CADAssistant.
+
+CADAssistant can be run in 'manual' or 'interactive' mode (default is the latter) by specifying either choice in the
+command line arguments.
+
+The name, polynomials, and variables of the problem should be input.
+
+The polynomials should be given as a list within square brackets and separated by commas. Multiplication of both
+constants and variables should be given using the asterisk symbol: '*'. Raising a variable to a power should be given
+with the carat symbol: '^'.
+
+Variables should be given as a comma-separated list within square brackets.
+
+For example:
+3D Example
+[x^2+y^2+z^2-1, 4*x*y*z-1]
+[x,y,z]
 
 """
 
@@ -147,7 +169,11 @@ class CadTTICAD(CadProblemMethod):
 #Initialising CAD
 def initialisationMethod():
     print(welcome)
-    namestr = raw_input("Please enter a name for the CAD problem:")
+    namestr = raw_input("Please enter a name for the CAD problem (or 'help'):")
+
+    if namestr.lower() == "help":
+        print(helpmessage)
+        namestr = raw_input("Please now enter the name for the CAD problem:")
     polystr = raw_input("Please enter the polynomials for your problem,\n within square brackets and separated by commas:")
     varstr  = raw_input("Please enter the variables for your problem,\n within square brackets and separated by commas:")
     # Separate the inputted polynomials
@@ -168,6 +194,11 @@ def initialisationMethod():
 
     return currCADproblem
 
+def polyToQEPCAD(polynom):
+    polynom = polynom.replace('*', ' ')
+    polynom = polynom.replace('+', ' + ')
+    polynom = polynom.replace('-', ' - ')
+    return polynom
 
 
 #manualMethod - let's the user choose how to construct their CAD
@@ -245,8 +276,8 @@ def manualMethod():
 def interactiveMethod():
     currCADproblem = initialisationMethod()
 
-    strictineq = raw_input("Does your problem involve only strict inequalities? [Y/n] : ").lower()
-    if strictineq=="" or strictineq == "y":
+    strictineq = raw_input("Does your problem involve only strict inequalities? [y/N] : ").lower()
+    if strictineq == "y":
         strictineq = True
     else:
         strictineq = False
@@ -298,10 +329,10 @@ def interactiveMethod():
 
         qepcadstr = quantifiers + "[ "
         for i in xrange(len(currCADproblem.polys)-1):
-            qepcadstr += "[ " + currCADproblem.polys[i] + " " +  polyrelations[i] + " 0 ]"
+            qepcadstr += "[ " + polyToQEPCAD(currCADproblem.polys[i]) + " " +  polyrelations[i] + " 0 ]"
             qepcadstr += " " + boolrelations[i] + " "
         if len(currCADproblem.polys)>1:
-            qepcadstr += "[ " + currCADproblem.polys[-1] + " " + polyrelations[-1] + " 0 ]"
+            qepcadstr += "[ " + polyToQEPCAD(currCADproblem.polys[-1]) + " " + polyrelations[-1] + " 0 ]"
         qepcadstr += " ]."
 
         qestr += qepcadstr
@@ -315,11 +346,12 @@ def interactiveMethod():
 
 if __name__ == "__main__":
     if len(arglist)>0:
-        if arglist[0]=='interactive':
-            print "Interactive mode enabled\n"
+        if arglist[0].lower() == 'interactive':
+            print "Interactive mode enabled.\n"
             interactiveMethod()
+        else:
+            print "Manual mode enabled.\n"
+            manualMethod()
     else:
-        print "Manual mode enables\n"
-        manualMethod()
-
-
+        print "No method specified. Default: interactive mode enabled.\n"
+        interactiveMethod()
