@@ -40,3 +40,4 @@ lm
 # Does problem need CAD or QE.
 # Are there equational constraints/clauses
 # Are there restrictions on variable ordering (QE)
+# Grobner bases

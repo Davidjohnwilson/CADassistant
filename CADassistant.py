@@ -64,6 +64,20 @@ class CadProblem:
         printstr += "Vars : \t" + ",".join(self.variables) + "\n"
         return printstr
 
+    def listOfPolys(self):
+        liststr = "["
+        for i in xrange(len(self.polys)):
+            liststr += self.polys[i] + ", "
+        liststr = liststr[:-2] + "]"
+        return liststr
+
+    def listOfVariables(self):
+        liststr = "["
+        for i in xrange(len(self.variables)):
+            liststr += self.variables[i] + ", "
+        liststr = liststr[:-2] + "]"
+        return liststr
+
 # CadProblemMethod Class (extends CadProblem)
 # A CAD problem along with choices of how to construct it, what
 # it needs to be invariant with respect to, and whether it uses
@@ -277,7 +291,7 @@ def interactiveMethod():
     currCADproblem = initialisationMethod()
 
     strictineq = raw_input("Does your problem involve only strict inequalities? [y/N] : ").lower()
-    if strictineq == "y":
+    if strictineq == "y" or strictineq == "yes":
         strictineq = True
     else:
         strictineq = False
@@ -293,6 +307,51 @@ def interactiveMethod():
         strictstr = strictstr[:-2] + "]):\n"
         strictstr += "nops(C);"
         print(strictstr)
+
+    grobnerpre = raw_input("Does your problem involve just a conjunction of equalities that you can use Grobner preconditioning for? [y/N] : ").lower()
+    if grobnerpre=="y" or grobnerpre=="yes":
+        grobnerpre = True
+    else:
+        grobnerpre = False
+
+    if grobnerpre:
+        tnoitest = raw_input("Do you wish to use TNoI to predict whether preconditioning will be useful? [Y/n] : ").lower()
+        if tnoitest=="n" or tnoitest=="no":
+            tnoitest = False
+        else:
+            tnoitest = True
+
+        if tnoitest:
+            print("Please run the following two lines of code: ")
+            print("TNoI:=proc(F): add(nops(indets(f)),f in F): end proc:")
+            print("TNoIdiff := TNoI(" + currCADproblem.listOfPolys() + ") - TNoI(Groebner[Basis](" + currCADproblem.listOfPolys() + ", plex(op(" + currCADproblem.listOfVariables() + "))));")
+            grobner = raw_input("Is the value positive? [y/n] : ").lower()
+            if grobner=="y" or grobner=="yes":
+                grobner = True
+            elif grobner=="n" or grobner=="no":
+                grobner = False
+        else:
+            grobner = raw_input("Do you want to use Grobner preconditioning? [y/N] : ").lower()
+            if grobner=="y" or grobner=="yes":
+                grobner = True
+            else:
+                grobner = False
+
+        if grobner:
+
+            print("Please copy the following code into Maple to compute the Grobner basis:")
+
+            print("Groebner[Basis](" + currCADproblem.listOfPolys() + ", plex(op(" + currCADproblem.listOfVariables() + ")));")
+
+            polystr = raw_input("Please copy the output:")
+
+            polylist = polystr.split(',')
+            polylist[0] = polylist[0][1:]     # Strip leading '['
+            polylist[-1] = polylist[-1][:-1]  # Strip trailing '['
+            for i in xrange(len(polylist)):
+                while (polylist[i][0] == ' '):
+                    polylist[i] = polylist[i][1:] # strip leading ' '
+            currCADproblem.polys = polylist
 
     qeProblem = raw_input("Does your problem require quantifier elimination? [y/N] : ").lower()
     if qeProblem == "y":
