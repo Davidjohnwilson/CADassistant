@@ -299,26 +299,27 @@ def interactiveMethod():
         variableheuristic = True
 
     if variableheuristic:
-        print("Please load Projection CAD to use any of the following heuristics.")
-        heuristicchoice = raw_input("Please select a heuristic to use from Brown's Heuristic [B], sotd [S] or ndrr [N] (the default is Brown's Heuristic). [B/s/n] :").lower()
+        print("Please load Projection CAD to use any of the following heuristics.\n")
+        heuristicchoice = raw_input("Please select a heuristic to use from:\n Brown's Heuristic [B], sotd [S] or ndrr [N]\n (the default is Brown's Heuristic). [B/s/n] :").lower()
         if heuristicchoice == "s" or heuristicchoice == "sotd":
-            heuristicchoice = "s"
+            heuristicchoice = "S"
         elif heuristicchoice == "n" or heuristicchoice == "ndrr":
-            heuristicchoice = "n"
+            heuristicchoice = "N"
         else:
-            heuristicchoice = "b"
+            heuristicchoice = "BrownFull"
 
-        if heuristicchoice == "s":
-            print("Please copy the following code into your Maple window:")
-            sotdstr = "S:=VariableOrderingHeuristic(["
-            for i in xrange(len(currCADproblem.variables)):
-                sotdstr += currCADproblem.variables[i] + ", "
-            sotdstr = sotdstr[:-2]+"], ["
-            for i in xrange(len(currCADproblem.polys)):
-                sotdstr += currCADproblem.polys[i] + ", "
-            sotdstr = sotdstr[:-2]+"]"
-            sotdstr += ",heuristic='S',SeeAll=false);\n"
-            print(sotdstr)
+        print("Please copy the following code into your Maple window:")
+        heurstr = "S:=VariableOrderingHeuristic(["
+        for i in xrange(len(currCADproblem.variables)):
+            heurstr += currCADproblem.variables[i] + ", "
+        heurstr = heurstr[:-2]+"], ["
+        for i in xrange(len(currCADproblem.polys)):
+            heurstr += currCADproblem.polys[i] + ", "
+        heurstr = heurstr[:-2]+"]"
+        heurstr += ",heuristic='"
+        heurstr += heuristicchoice
+        heurstr += "',SeeAll=false);\n"
+        print(heurstr)
 
         heurvars = raw_input("Please paste the output from the above command: ")
 
