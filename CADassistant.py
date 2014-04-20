@@ -290,6 +290,30 @@ def manualMethod():
 def interactiveMethod():
     currCADproblem = initialisationMethod()
 
+    # VARIABLE HEURISTIC CHOICE
+
+    variableheuristic = raw_input("Do you wish to use a heuristic to choose a variable ordering? [Y/n] : ").lower()
+    if variableheuristic == "n" or variableheuristic == "no":
+        variableheuristic = False
+    else:
+        variableheuristic = True
+
+    if variableheuristic:
+        print("Please load Projection CAD to use any of the following heuristics.")
+        heuristicchoice = raw_input("Please select a heuristic to use from Brown's Heuristic [B], sotd [S] or ndrr [N] (the default is Brown's Heuristic). [B/s/n] :").lower()
+        if heuristicchoice == "s" or heuristicchoice == "sotd":
+            heuristicchoice = "s"
+        elif heuristicchoice == "n" or heuristicchoice == "ndrr":
+            heuristicchoice = "n"
+        else:
+            heuristicchoice = "b"
+
+
+
+
+
+    # ONE LAYERED CAD CHOICE
+
     strictineq = raw_input("Does your problem involve only strict inequalities? [y/N] : ").lower()
     if strictineq == "y" or strictineq == "yes":
         strictineq = True
@@ -307,6 +331,8 @@ def interactiveMethod():
         strictstr = strictstr[:-2] + "]):\n"
         strictstr += "nops(C);"
         print(strictstr)
+
+    # GROBNER PRECONDITIONING CHOICE
 
     grobnerpre = raw_input("Does your problem involve just a conjunction of equalities that you can use Grobner preconditioning for? [y/N] : ").lower()
     if grobnerpre=="y" or grobnerpre=="yes":
@@ -352,6 +378,8 @@ def interactiveMethod():
                 while (polylist[i][0] == ' '):
                     polylist[i] = polylist[i][1:] # strip leading ' '
             currCADproblem.polys = polylist
+
+    # QUANTIFIER ELIMINATION CHOICE
 
     qeProblem = raw_input("Does your problem require quantifier elimination? [y/N] : ").lower()
     if qeProblem == "y":
