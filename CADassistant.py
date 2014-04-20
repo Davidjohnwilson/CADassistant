@@ -308,8 +308,26 @@ def interactiveMethod():
         else:
             heuristicchoice = "b"
 
+        if heuristicchoice == "s":
+            print("Please copy the following code into your Maple window:")
+            sotdstr = "S:=VariableOrderingHeuristic(["
+            for i in xrange(len(currCADproblem.variables)):
+                sotdstr += currCADproblem.variables[i] + ", "
+            sotdstr = sotdstr[:-2]+"], ["
+            for i in xrange(len(currCADproblem.polys)):
+                sotdstr += currCADproblem.polys[i] + ", "
+            sotdstr = sotdstr[:-2]+"]"
+            sotdstr += ",heuristic='S',SeeAll=false);\n"
+            print(sotdstr)
 
+        heurvars = raw_input("Please paste the output from the above command: ")
 
+         # Separate the inputted variables
+        heurvars = heurvars.split(',')
+        heurvars[0] = heurvars[0][1:]       # Strip leading '['
+        heurvars[-1] = heurvars[-1][:-1]    # Strip trailing '['
+        currCADproblem.variables = heurvars
+        print("Variable ordering has been successfully changed.")
 
 
     # ONE LAYERED CAD CHOICE
