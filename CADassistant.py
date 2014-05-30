@@ -300,13 +300,29 @@ def interactiveMethod():
 
     if variableheuristic:
         print("Please load Projection CAD to use any of the following heuristics.\n")
-        heuristicchoice = raw_input("Please select a heuristic to use from:\n Brown's Heuristic [B], sotd [S] or ndrr [N]\n (the default is Brown's Heuristic). [B/s/n] :").lower()
-        if heuristicchoice == "s" or heuristicchoice == "sotd":
-            heuristicchoice = "S"
-        elif heuristicchoice == "n" or heuristicchoice == "ndrr":
-            heuristicchoice = "N"
+
+        manualheuristic = raw_input("Do you wish to pick the heuristic manually [m], or automatically [a]? [m/A] :").lower()
+        if manualheuristic == "m" or manualheuristic == "manual" or manualheuristic == "manually":
+            manualheuristic = True
         else:
-            heuristicchoice = "BrownFull"
+            manualheuristic = False
+
+        if manualheuristic:
+            heuristicchoice = raw_input("Please select a heuristic to use from:\n Brown's Heuristic [B], sotd [S], ndrr [N], or 1-Layered Heuristic [LAY]\n (the default is Brown's Heuristic). [B/s/n/lay] :").lower()
+            if heuristicchoice == "s" or heuristicchoice == "sotd":
+                heuristicchoice = "S"
+            elif heuristicchoice == "n" or heuristicchoice == "ndrr":
+                heuristicchoice = "N"
+            elif heuristicchoice == "lay" or heuristicchoice == "layered" or heuristicchoice == "l":
+                heuristicchoice = "LayeredHeuristic"
+            else:
+                heuristicchoice = "BrownBasic"
+        else:
+            heuristicchoice = raw_input("Do you want a quick heuristic that may be less accurate [Q], or a slower heuristic that is more accurate [S]? [Q/s] :").lower()
+            if heuristicchoice == "s" or heuristicchoice == "slow":
+                heuristicchoice = "LayeredHeuristic"
+            else:
+                heuristicchoice = "BrownBasic"
 
         print("Please copy the following code into your Maple window:")
         heurstr = "S:=VariableOrderingHeuristic(["
