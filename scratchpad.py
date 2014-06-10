@@ -22,17 +22,34 @@ print(clausenums)
 
 
 
-#Test input
+#Test input for Manual
 """
-Test problem Name
+Sample CADassistant Problem
 [3*x^2+4*y-3, x^2-y^3,x^3-y^2,y-x]
 [x,y]
 t
 tti
-lm
+lv
 [[0,3],[1,2]]
 3
 1
+yes
+"""
+
+
+#Test input for Interactive
+"""
+Sample CADassistant Problem
+[3*x^2+4*y-3, x^2-y^3,x^3-y^2,y-x]
+[x,y]
+Y
+A
+Q
+[x,y]
+N
+N
+N
+
 """
 
 # Questions to ask:

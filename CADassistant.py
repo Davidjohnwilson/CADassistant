@@ -120,12 +120,12 @@ class CadProblemMethod(CadProblem):
         elif self.constr.lower() == "triangular sets" or self.constr.lower() == "regular chains" or self.constr.lower() == "t" or self.constr.lower() == "rc":
             CADstring = "RC-"+CADstring
 
-        if self.subCAD.lower() == "manifold" or self.subCAD.lower() == "m":
-            CADstring = "M-"+CADstring
+        if self.subCAD.lower() == "variety" or self.subCAD.lower() == "v":
+            CADstring = "V-"+CADstring
         elif self.subCAD.lower() == "layered" or self.subCAD.lower() == "l":
-            CADstring = "M-"+CADstring
-        elif self.subCAD.lower() == "layered manifold" or self.subCAD.lower() == "lm":
-            CADstring = "LM-"+CADstring
+            CADstring = "L-"+CADstring
+        elif self.subCAD.lower() == "layered variety" or self.subCAD.lower() == "lv":
+            CADstring = "LV-"+CADstring
 
         return CADstring #subCAD+"-"+constr+"-"+inva+"CAD"
 
@@ -242,7 +242,7 @@ def manualMethod():
     print("\nCurrent Problem:\n"+currCADproblem.printCADproblem())
 
     print("Checking whether we are dealing with Equational Constraints or TTICAD...\n")
-    if currCADproblem.inva.lower() == "eq" or currCADproblem.inva.lower() == "tti":
+    if currCADproblem.inva.lower() == "eq" or currCADproblem.inva.lower() == "tti" or currCADproblem.inva.lower() == "truth table":
         print("Dealing with Equational constraints. Now identifying clauses.\n")
         # Cast object into a CadTTICAD object.
         currCADproblem.__class__ = CadTTICAD
@@ -283,14 +283,38 @@ def manualMethod():
 
         print("\n\nSummary of TTICAD Problem:\n\n" + currCADproblem.printTTICAD())
 
-
         #eqconsstr = raw_input("")
         #currCADproblem.setEqCons([[1]])
         #print(currCADproblem.printTTICADClauses())
 
-
     else:
         print("Dealing with non-equational constraint based CAD")
+
+    mapleoutputstr = raw_input("Would you like the input for Maple?").lower()
+    if mapleoutputstr == "y" or mapleoutputstr == "yes":
+        mapleoutputstr = "Cad := " + currCADproblem.subCAD.upper()
+        if currCADproblem.inva.lower() == "eq":
+            mapleoutputstr += "ECCAD(["
+            mapleoutputstr += currCADproblem.polys[currCADproblem.eqcons[0][0]] + ",["
+            for i in xrange(len(currCADproblem.polys)):
+                if i != currCADproblem.eqcons[0][0]:
+                    mapleoutputstr += currCADproblem.polys[i] + ","
+            mapleoutputstr = mapleoutputstr[:-1] + "]]"
+
+        if currCADproblem.inva.lower() == "tti" or currCADproblem.inva.lower() == "truth table":
+            mapleoutputstr += "TTICAD(["
+            for i in xrange(len(currCADproblem.clauses)):
+                mapleoutputstr += "[" + currCADproblem.polys[int(currCADproblem.eqcons[i][0])] + ",["
+                for j in currCADproblem.clauses[i]:
+                    if int(j) != int(currCADproblem.eqcons[i][0]):
+                        mapleoutputstr += currCADproblem.polys[j] + ","
+                mapleoutputstr = mapleoutputstr[:-1] +  "]],"
+            mapleoutputstr = mapleoutputstr[:-1] +  "]"
+
+        mapleoutputstr += "," + currCADproblem.listOfVariables()
+        mapleoutputstr += ");"
+
+        print(mapleoutputstr)
 
 #Interactive Method tries to discover the best formulation
 def interactiveMethod():
