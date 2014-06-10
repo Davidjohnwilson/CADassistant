@@ -175,9 +175,14 @@ class CadTTICAD(CadProblemMethod):
         printstr = "Clauses:\t"
         for cl in self.clauses:
             printstr += "[" + ",".join(map(str,cl)) + "]\t"
-        printstr += "\nEqCons: \t"
+        printstr += "\nEqCons :\t"
         for ec in self.eqcons:
-            printstr += "[" + ",".join(map(str,ec)) + "]\t"
+            printstr += "[" + ",".join(map(str,ec)) + "]\t\t"
+        return printstr + "\n"
+
+    def printTTICAD(self):
+        printstr = self.printCADproblem()
+        printstr += self.printTTICADClauses()
         return printstr + "\n"
 
 #Initialising CAD
@@ -247,7 +252,8 @@ def manualMethod():
                 print("Poly " + str(j) + ": " + str(currCADproblem.polys[j]))
 
 
-        clausestr = raw_input("Please enter in the clauses of the TTICAD (as a list of lists identifying the correct polynomials), or if dealing with equational constraints leave empty: ")
+        clausestr = raw_input("Please enter in the clauses of the TTICAD (as a list of lists identifying the correct\n"
+                              " polynomials), or if dealing with equational constraints leave empty: ")
         if clausestr == "":
             currCADproblem.setClauses([list(xrange(len(currCADproblem.polys)))])
             print(currCADproblem.clauses)
@@ -275,7 +281,7 @@ def manualMethod():
             EClist.append([clauseEC])
         currCADproblem.setEqCons(EClist)
 
-        print("\n" + currCADproblem.printTTICADClauses())
+        print("\n\nSummary of TTICAD Problem:\n\n" + currCADproblem.printTTICAD())
 
 
         #eqconsstr = raw_input("")
