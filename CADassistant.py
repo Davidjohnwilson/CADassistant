@@ -386,16 +386,41 @@ def interactiveMethod():
         strictineq = False
 
     if strictineq:
-        print("You should use a 1-layered CAD. Please load Projection CAD and use the following input: ")
-        strictstr = "C:=LCAD( ["
-        for i in xrange(len(currCADproblem.polys)):
-            strictstr += currCADproblem.polys[i] + ", "
-        strictstr = strictstr[:-2] + "], 1, [" #remove final comma
-        for i in xrange(len(currCADproblem.variables)):
-            strictstr += currCADproblem.variables[i] + ", "
-        strictstr = strictstr[:-2] + "]):\n"
-        strictstr += "nops(C);"
-        print(strictstr)
+        print("You should use a 1-layered CAD.")
+        projectioncadstr = raw_input("Would you like to use ProjectionCAD [P] or Qepcad [Q]? [P/q] :").lower()
+        if projectioncadstr == "q" or projectioncadstr == "qepcad":
+            projectioncadstr = False
+        else:
+            projectioncadstr = True
+        if projectioncadstr:
+            print("Please load Projection CAD and use the following input: ")
+            strictstr = "C:=LCAD( ["
+            for i in xrange(len(currCADproblem.polys)):
+                strictstr += currCADproblem.polys[i] + ", "
+            strictstr = strictstr[:-2] + "], 1, [" #remove final comma
+            for i in xrange(len(currCADproblem.variables)):
+                strictstr += currCADproblem.variables[i] + ", "
+            strictstr = strictstr[:-2] + "],method='McCallum'):\n"
+            strictstr += "nops(C);"
+            print(strictstr)
+        else:
+            print("Please copy the following into Qepcad:")
+            strictstr = "[" + currCADproblem.name + "]\n"
+            strictstr = strictstr + "("
+            numvars = len(currCADproblem.variables)
+            for i in xrange(numvars):
+                strictstr += currCADproblem.variables[numvars-(i+1)] + ","
+            strictstr = strictstr[:-1] + ")\n"
+            strictstr += str(numvars) + "\n"
+            strictstr += "["
+            for i in xrange(len(currCADproblem.polys)):
+                strictstr += "[" + currCADproblem.polys[i].replace("*"," ").replace("+"," + ").replace("-", " - ") + " > 0] /\\ "
+            strictstr = strictstr[:-4] + "].\n"
+            strictstr += "measure-zero-error\ngo\ngo\ngo\nd-fpc-stat\nfinish\n"
+            print(strictstr)
+            #pick inequalities
+
+        return
 
     # GROBNER PRECONDITIONING CHOICE
 
